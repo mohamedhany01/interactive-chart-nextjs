@@ -14,15 +14,15 @@ describe('Home Page', () => {
         expect(description).toBeInTheDocument();
     });
 
-    it('should have a filter controls placeholder', () => {
+    it('should render the certification filters', () => {
         render(<Home />);
-        const filterPlaceholder = screen.getByText(/Filter controls will appear here/i);
-        expect(filterPlaceholder).toBeInTheDocument();
+        const clearButton = screen.getByRole('button', { name: /clear filters/i });
+        expect(clearButton).toBeInTheDocument();
     });
 
-    it('should have a chart container placeholder', () => {
+    it('should render the results count', () => {
         render(<Home />);
-        const chartPlaceholder = screen.getByText(/Chart visualization coming soon/i);
-        expect(chartPlaceholder).toBeInTheDocument();
+        const resultsCount = screen.getByText(/showing.*certifications/i);
+        expect(resultsCount).toBeInTheDocument();
     });
 });

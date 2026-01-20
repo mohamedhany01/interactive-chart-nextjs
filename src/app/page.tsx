@@ -1,4 +1,22 @@
+'use client';
+
+import { CertificationChart } from '@/components/CertificationChart';
+import { CertificationFilters } from '@/components/CertificationFilters';
+import { useChartFilters } from '@/hooks/useChartFilters';
+import { mockCertifications } from '@/data/mock-certifications';
+
 export default function Home() {
+    const {
+        selectedType,
+        selectedLevels,
+        searchQuery,
+        filteredCertifications,
+        setSelectedType,
+        toggleSkillLevel,
+        setSearchQuery,
+        clearFilters,
+    } = useChartFilters(mockCertifications);
+
     return (
         <main className="min-h-screen bg-background p-4 md:p-8">
             <div className="max-w-7xl mx-auto space-y-6">
@@ -12,19 +30,27 @@ export default function Home() {
                     </p>
                 </header>
 
-                {/* Action Bar - Filters will go here */}
+                {/* Filters */}
                 <div className="rounded-lg border bg-card p-4">
-                    <div className="text-sm text-muted-foreground">
-                        Filter controls will appear here
-                    </div>
+                    <CertificationFilters
+                        selectedType={selectedType}
+                        selectedLevels={selectedLevels}
+                        searchQuery={searchQuery}
+                        onTypeChange={setSelectedType}
+                        onLevelToggle={toggleSkillLevel}
+                        onSearchChange={setSearchQuery}
+                        onClearFilters={clearFilters}
+                    />
                 </div>
 
-                {/* Chart Container - Chart will go here */}
-                <div className="rounded-lg border bg-card p-6 min-h-[600px] flex items-center justify-center">
-                    <div className="text-center text-muted-foreground">
-                        <p className="text-lg font-medium">Chart visualization coming soon</p>
-                        <p className="text-sm mt-2">16 certifications ready to display</p>
-                    </div>
+                {/* Results Count */}
+                <div className="text-sm text-muted-foreground">
+                    Showing {filteredCertifications.length} of {mockCertifications.length} certifications
+                </div>
+
+                {/* Chart */}
+                <div className="rounded-lg border bg-card p-6">
+                    <CertificationChart data={filteredCertifications} />
                 </div>
             </div>
         </main>
