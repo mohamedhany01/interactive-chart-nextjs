@@ -97,7 +97,7 @@ npm audit       # Security check (0 vulnerabilities)
 3. **English Only**: No internationalization
 4. **Desktop Optimized**: Mobile works but desktop experience is better
 
-## �️ Tech Stack
+## 🛠️ Tech Stack
 
 - **Framework**: Next.js 16.1.4 (App Router)
 - **Language**: TypeScript
@@ -116,7 +116,7 @@ npm run lint    # ESLint
 npm test        # Jest tests
 ```
 
-## � Deployment
+## 🚀 Deployment
 
 **Vercel (Recommended):**
 1. Push to GitHub
@@ -128,6 +128,6 @@ npm test        # Jest tests
 - Build time: ~2 seconds
 - Zero errors/warnings
 
-## � License
+## 📄 License
 
-MIT
+GNU General Public License v3.0
