@@ -1,10 +1,10 @@
-import { CertType } from '@/types/certification';
+import { CertType, Certification } from '@/types/certification';
 
 interface CustomNodeProps {
     cx?: number;
     cy?: number;
-    payload?: any;
-    onClick?: (data: any) => void;
+    payload?: Certification;
+    onClick?: (data: Certification) => void;
 }
 
 const CERT_TYPE_COLORS = {

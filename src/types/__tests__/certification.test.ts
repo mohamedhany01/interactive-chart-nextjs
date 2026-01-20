@@ -1,7 +1,6 @@
 import {
     CertType,
     SkillLevel,
-    CertificationSchema,
     validateCertification,
     safeParseCertification,
     type Certification,

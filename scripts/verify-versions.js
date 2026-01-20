@@ -6,6 +6,7 @@
  * CVE-2025-55182, CVE-2025-55184, CVE-2025-67779
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 
