@@ -116,18 +116,6 @@ npm run lint    # ESLint
 npm test        # Jest tests
 ```
 
-## 🚀 Deployment
-
-**Vercel (Recommended):**
-1. Push to GitHub
-2. Import repo in Vercel
-3. Auto-deploys on push
-
-**Build Output:**
-- Static pages: 3 routes
-- Build time: ~2 seconds
-- Zero errors/warnings
-
 ## 📄 License
 
 GNU General Public License v3.0
