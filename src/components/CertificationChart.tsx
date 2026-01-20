@@ -9,6 +9,7 @@ import {
     Tooltip,
     ResponsiveContainer,
     Label,
+    ReferenceArea,
 } from 'recharts';
 import { Certification } from '@/types/certification';
 
@@ -23,6 +24,51 @@ export function CertificationChart({ data }: CertificationChartProps) {
                 margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
             >
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+
+                {/* Quadrant Backgrounds */}
+                {/* Bottom-Left: Niche Players (low market, low satisfaction) */}
+                <ReferenceArea
+                    x1={0}
+                    x2={0.5}
+                    y1={1}
+                    y2={3}
+                    fill="hsl(var(--muted))"
+                    fillOpacity={0.1}
+                    label={{ value: 'Niche Players', position: 'bottom', className: 'fill-muted-foreground text-xs' }}
+                />
+
+                {/* Top-Left: Challengers (low market, high satisfaction) */}
+                <ReferenceArea
+                    x1={0}
+                    x2={0.5}
+                    y1={3}
+                    y2={5}
+                    fill="hsl(var(--muted))"
+                    fillOpacity={0.15}
+                    label={{ value: 'Challengers', position: 'top', className: 'fill-muted-foreground text-xs font-medium' }}
+                />
+
+                {/* Bottom-Right: Contenders (high market, low satisfaction) */}
+                <ReferenceArea
+                    x1={0.5}
+                    x2={1}
+                    y1={1}
+                    y2={3}
+                    fill="hsl(var(--muted))"
+                    fillOpacity={0.15}
+                    label={{ value: 'Contenders', position: 'bottom', className: 'fill-muted-foreground text-xs' }}
+                />
+
+                {/* Top-Right: Leaders (high market, high satisfaction) */}
+                <ReferenceArea
+                    x1={0.5}
+                    x2={1}
+                    y1={3}
+                    y2={5}
+                    fill="hsl(var(--primary))"
+                    fillOpacity={0.05}
+                    label={{ value: 'Leaders', position: 'top', className: 'fill-primary text-xs font-semibold' }}
+                />
 
                 {/* X-Axis: Market Presence */}
                 <XAxis
