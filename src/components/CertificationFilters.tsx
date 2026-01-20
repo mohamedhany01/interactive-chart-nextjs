@@ -64,7 +64,14 @@ export function CertificationFilters({
                     <label className="text-sm font-medium">Skill Level</label>
                     <Select
                         value={selectedLevels.length > 0 ? selectedLevels[0] : undefined}
-                        onValueChange={(value) => onLevelToggle(value as SkillLevel)}
+                        onValueChange={(value) => {
+                            if (value === 'clear-all') {
+                                // Clear all selected levels
+                                selectedLevels.forEach(level => onLevelToggle(level));
+                            } else {
+                                onLevelToggle(value as SkillLevel);
+                            }
+                        }}
                     >
                         <SelectTrigger>
                             <SelectValue placeholder={
@@ -74,6 +81,14 @@ export function CertificationFilters({
                             } />
                         </SelectTrigger>
                         <SelectContent>
+                            {selectedLevels.length > 0 && (
+                                <>
+                                    <SelectItem value="clear-all" className="text-destructive font-medium">
+                                        Clear All
+                                    </SelectItem>
+                                    <div className="h-px bg-border my-1" />
+                                </>
+                            )}
                             {SKILL_LEVELS.map((level) => (
                                 <SelectItem
                                     key={level}
