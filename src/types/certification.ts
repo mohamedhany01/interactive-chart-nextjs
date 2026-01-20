@@ -1,53 +1,72 @@
 import { z } from 'zod';
 
 /**
- * Certification Type Enum
+ * Certification Type Union
  */
-export enum CertType {
-    BLUE_TEAM = "Blue Team",
-    RED_TEAM = "Red Team",
-    INFOSEC = "InfoSec",
-}
+export const CertTypeSchema = z.enum(["blue", "red", "infoSec"]);
+export type CertType = z.infer<typeof CertTypeSchema>;
 
 /**
- * Skill Level Enum
+ * Skill Level Union
  */
-export enum SkillLevel {
-    NOVICE = "Novice",
-    BEGINNER = "Beginner",
-    INTERMEDIATE = "Intermediate",
-    ADVANCED = "Advanced",
-    EXPERT = "Expert",
-}
+export const SkillLevelSchema = z.enum(["Novice", "Beginner", "Intermediate", "Advanced", "Expert"]);
+export type SkillLevel = z.infer<typeof SkillLevelSchema>;
 
 /**
- * Zod Schema for CertType
+ * Provider Schema
  */
-export const CertTypeSchema = z.nativeEnum(CertType);
+export const ProviderSchema = z.object({
+    name: z.string(),
+    url: z.string().url(),
+    image: z.string(),
+}).nullable();
 
 /**
- * Zod Schema for SkillLevel
+ * Requirements Data Schema
  */
-export const SkillLevelSchema = z.nativeEnum(SkillLevel);
+export const RequirementsDataSchema = z.object({
+    knowledge: z.string(),
+    work_experience: z.string(),
+    prior_courses_and_certifications: z.string(),
+});
 
 /**
- * Zod Schema for Certification
- * Validates all fields with strict constraints
+ * Exam Details Data Schema
+ */
+export const ExamDetailsDataSchema = z.object({
+    format: z.string(),
+    duration: z.string().nullable(),
+    report_required: z.boolean(),
+});
+
+/**
+ * Certification Schema
+ * Validates all fields with strict constraints matching API structure
  */
 export const CertificationSchema = z.object({
-    id: z.string().min(1, "ID must not be empty"),
-    title: z.string().min(1, "Title must not be empty"),
-    abbreviation: z.string().min(1, "Abbreviation must not be empty"),
-    provider: z.string().min(1, "Provider must not be empty"),
+    id: z.number().int().positive(),
+    slug: z.string().min(1),
+    title: z.string().min(1),
+    abbreviation: z.string().min(1),
+    description: z.string().min(1),
+    image: z.string(),
+    url: z.string().url(),
+    cost: z.string().min(1),
+    training_included: z.boolean(),
+    number_of_attempts: z.number().int().nonnegative(),
+    job_roles_titles: z.array(z.string()),
     cert_type: CertTypeSchema,
-    skill_level: SkillLevelSchema,
+    total_votes: z.number().int().nonnegative(),
     market_presence: z.number().min(0.0).max(1.0, "Market presence must be between 0.0 and 1.0"),
+    cost_effectiveness: z.number().min(1.0).max(5.0, "Cost effectiveness must be between 1.0 and 5.0"),
+    skill_level: SkillLevelSchema,
+    quality: z.number().min(1.0).max(5.0, "Quality must be between 1.0 and 5.0"),
     satisfaction: z.number().min(1.0).max(5.0, "Satisfaction must be between 1.0 and 5.0"),
-    total_votes: z.number().int().nonnegative("Total votes must be a non-negative integer"),
-    description: z.string().min(1, "Description must not be empty"),
-    cost: z.string().min(1, "Cost must not be empty"),
-    exam_details: z.string().min(1, "Exam details must not be empty"),
-    requirements_data: z.string().min(1, "Requirements data must not be empty"),
+    provider: ProviderSchema,
+    domains_covered_titles: z.array(z.string()),
+    requirements_data: RequirementsDataSchema,
+    exam_details_data: ExamDetailsDataSchema,
+    valid_for: z.string().nullable(),
 });
 
 /**
@@ -76,4 +95,11 @@ export function validateCertification(data: unknown): Certification {
  */
 export function safeParseCertification(data: unknown) {
     return CertificationSchema.safeParse(data);
+}
+
+/**
+ * Validate array of certifications
+ */
+export function validateCertifications(data: unknown): Certification[] {
+    return z.array(CertificationSchema).parse(data);
 }
