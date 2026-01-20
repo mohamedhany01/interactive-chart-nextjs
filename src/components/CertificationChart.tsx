@@ -53,7 +53,7 @@ export function CertificationChart({ data }: CertificationChartProps) {
                     </Button>
                 </div>
 
-                <ResponsiveContainer width="100%" height={chartHeight}>
+                <ResponsiveContainer width="100%" height={isFullScreen ? '100%' : 600}>
                     <ScatterChart
                         margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
                     >
