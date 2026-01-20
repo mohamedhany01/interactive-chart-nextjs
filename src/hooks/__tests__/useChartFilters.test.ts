@@ -1,6 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChartFilters } from '../useChartFilters';
-import { Certification, CertType, SkillLevel } from '@/types/certification';
+import { Certification } from '@/types/certification';
 
 // Mock certifications for testing
 const mockCertifications: Certification[] = [
@@ -185,48 +185,61 @@ describe('useChartFilters', () => {
         });
     });
 
-    describe('Search Filtering', () => {
-        it('should filter by title search', () => {
+    describe('Search Filtering (Debounced)', () => {
+        it('should filter by title search after debounce', async () => {
             const { result } = renderHook(() => useChartFilters(mockCertifications));
 
             act(() => {
                 result.current.setSearchQuery('CISSP');
             });
 
-            expect(result.current.filteredCertifications).toHaveLength(1);
+            // Wait for debounce (300ms)
+            await waitFor(() => {
+                expect(result.current.filteredCertifications).toHaveLength(1);
+            }, { timeout: 500 });
+
             expect(result.current.filteredCertifications[0].title).toBe('CISSP');
         });
 
-        it('should filter by abbreviation search', () => {
+        it('should filter by abbreviation search after debounce', async () => {
             const { result } = renderHook(() => useChartFilters(mockCertifications));
 
             act(() => {
                 result.current.setSearchQuery('OSCP');
             });
 
-            expect(result.current.filteredCertifications).toHaveLength(1);
+            await waitFor(() => {
+                expect(result.current.filteredCertifications).toHaveLength(1);
+            }, { timeout: 500 });
+
             expect(result.current.filteredCertifications[0].abbreviation).toBe('OSCP');
         });
 
-        it('should filter by description search', () => {
+        it('should filter by description search after debounce', async () => {
             const { result } = renderHook(() => useChartFilters(mockCertifications));
 
             act(() => {
                 result.current.setSearchQuery('penetration');
             });
 
-            expect(result.current.filteredCertifications).toHaveLength(1);
+            await waitFor(() => {
+                expect(result.current.filteredCertifications).toHaveLength(1);
+            }, { timeout: 500 });
+
             expect(result.current.filteredCertifications[0].slug).toBe('oscp');
         });
 
-        it('should be case-insensitive', () => {
+        it('should be case-insensitive after debounce', async () => {
             const { result } = renderHook(() => useChartFilters(mockCertifications));
 
             act(() => {
                 result.current.setSearchQuery('security+');
             });
 
-            expect(result.current.filteredCertifications).toHaveLength(1);
+            await waitFor(() => {
+                expect(result.current.filteredCertifications).toHaveLength(1);
+            }, { timeout: 500 });
+
             expect(result.current.filteredCertifications[0].title).toBe('Security+');
         });
     });
@@ -244,7 +257,7 @@ describe('useChartFilters', () => {
             expect(result.current.filteredCertifications[0].slug).toBe('cissp');
         });
 
-        it('should apply all three filters together', () => {
+        it('should apply all three filters together after debounce', async () => {
             const { result } = renderHook(() => useChartFilters(mockCertifications));
 
             act(() => {
@@ -253,11 +266,14 @@ describe('useChartFilters', () => {
                 result.current.setSearchQuery('OSCP');
             });
 
-            expect(result.current.filteredCertifications).toHaveLength(1);
+            await waitFor(() => {
+                expect(result.current.filteredCertifications).toHaveLength(1);
+            }, { timeout: 500 });
+
             expect(result.current.filteredCertifications[0].slug).toBe('oscp');
         });
 
-        it('should return empty array when no matches', () => {
+        it('should return empty array when no matches after debounce', async () => {
             const { result } = renderHook(() => useChartFilters(mockCertifications));
 
             act(() => {
@@ -265,7 +281,9 @@ describe('useChartFilters', () => {
                 result.current.setSearchQuery('OSCP');
             });
 
-            expect(result.current.filteredCertifications).toHaveLength(0);
+            await waitFor(() => {
+                expect(result.current.filteredCertifications).toHaveLength(0);
+            }, { timeout: 500 });
         });
     });
 

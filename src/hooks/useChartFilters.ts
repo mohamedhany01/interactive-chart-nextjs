@@ -1,38 +1,45 @@
 import { useState, useMemo } from 'react';
 import { Certification, CertType, SkillLevel } from '@/types/certification';
+import { useDebounce } from './useDebounce';
 
-export interface FilterState {
-    selectedType: CertType | 'all';
-    selectedLevels: SkillLevel[];
-    searchQuery: string;
-}
-
+/**
+ * Custom hook for managing chart filters and filtering logic
+ * @param certifications - Array of certifications to filter
+ * @returns Filter state and handlers
+ */
 export function useChartFilters(certifications: Certification[]) {
     const [selectedType, setSelectedType] = useState<CertType | 'all'>('all');
     const [selectedLevels, setSelectedLevels] = useState<SkillLevel[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Filter certifications based on all criteria
+    // Debounce search query to reduce filtering operations while typing (300ms delay)
+    const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+    /**
+     * Filter certifications based on selected filters
+     */
     const filteredCertifications = useMemo(() => {
         return certifications.filter((cert) => {
-            // Type filter
+            // Filter by certification type
             const typeMatch = selectedType === 'all' || cert.cert_type === selectedType;
 
-            // Skill level filter (if any levels selected, cert must match one of them)
+            // Filter by skill level
             const levelMatch = selectedLevels.length === 0 || selectedLevels.includes(cert.skill_level);
 
-            // Search filter (search in title, abbreviation, and description)
+            // Filter by search query (debounced to improve performance)
             const searchMatch =
-                searchQuery === '' ||
-                cert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                cert.abbreviation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                cert.description.toLowerCase().includes(searchQuery.toLowerCase());
+                debouncedSearchQuery === '' ||
+                cert.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+                cert.abbreviation.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+                cert.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
 
             return typeMatch && levelMatch && searchMatch;
         });
-    }, [certifications, selectedType, selectedLevels, searchQuery]);
+    }, [certifications, selectedType, selectedLevels, debouncedSearchQuery]);
 
-    // Toggle skill level selection
+    /**
+     * Toggle a skill level filter
+     */
     const toggleSkillLevel = (level: SkillLevel) => {
         setSelectedLevels((prev) =>
             prev.includes(level)
@@ -41,7 +48,9 @@ export function useChartFilters(certifications: Certification[]) {
         );
     };
 
-    // Clear all filters
+    /**
+     * Clear all filters
+     */
     const clearFilters = () => {
         setSelectedType('all');
         setSelectedLevels([]);
