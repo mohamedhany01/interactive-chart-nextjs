@@ -9,19 +9,41 @@ import {
 
 describe('Certification Type Validation', () => {
     const validCertification: Certification = {
-        id: 'cert-001',
+        id: 1,
+        slug: 'cissp-test',
         title: 'Certified Information Systems Security Professional',
         abbreviation: 'CISSP',
-        provider: '(ISC)²',
-        cert_type: CertType.INFOSEC,
-        skill_level: SkillLevel.ADVANCED,
-        market_presence: 0.85,
-        satisfaction: 4.5,
-        total_votes: 1250,
         description: 'A globally recognized certification in information security',
+        image: '/certs/cissp.png',
+        url: 'https://www.isc2.org/Certifications/CISSP',
         cost: '$749 USD',
-        exam_details: '6 hours, 100-150 questions',
-        requirements_data: '5 years of experience in 2+ domains',
+        training_included: false,
+        number_of_attempts: 3,
+        job_roles_titles: ['Security Architect', 'Security Consultant'],
+        cert_type: 'infoSec' as CertType,
+        total_votes: 1250,
+        market_presence: 0.85,
+        cost_effectiveness: 4.5,
+        skill_level: 'Advanced' as SkillLevel,
+        quality: 4.7,
+        satisfaction: 4.5,
+        provider: {
+            name: '(ISC)²',
+            url: 'https://www.isc2.org',
+            image: '/providers/isc2.png'
+        },
+        domains_covered_titles: ['Security and Risk Management', 'Asset Security'],
+        requirements_data: {
+            knowledge: 'Understanding of 8 CISSP domains',
+            work_experience: '5 years of cumulative paid work experience',
+            prior_courses_and_certifications: 'None required'
+        },
+        exam_details_data: {
+            format: 'Multiple choice and advanced innovative questions',
+            duration: '6 hours',
+            report_required: false
+        },
+        valid_for: '3 years'
     };
 
     describe('Valid Certification', () => {
@@ -96,32 +118,34 @@ describe('Certification Type Validation', () => {
         });
     });
 
-    describe('Enum Validation', () => {
-        it('should accept valid CertType', () => {
-            const blueTeam = { ...validCertification, cert_type: CertType.BLUE_TEAM };
-            const redTeam = { ...validCertification, cert_type: CertType.RED_TEAM };
-            const infoSec = { ...validCertification, cert_type: CertType.INFOSEC };
+    describe('CertType Validation', () => {
+        it('should accept valid cert_type values', () => {
+            const blueTeam = { ...validCertification, cert_type: 'blue' as CertType };
+            const redTeam = { ...validCertification, cert_type: 'red' as CertType };
+            const infoSec = { ...validCertification, cert_type: 'infoSec' as CertType };
 
             expect(() => validateCertification(blueTeam)).not.toThrow();
             expect(() => validateCertification(redTeam)).not.toThrow();
             expect(() => validateCertification(infoSec)).not.toThrow();
         });
 
-        it('should reject invalid CertType', () => {
+        it('should reject invalid cert_type', () => {
             const cert = { ...validCertification, cert_type: 'Invalid Type' };
             const result = safeParseCertification(cert);
             expect(result.success).toBe(false);
         });
+    });
 
-        it('should accept valid SkillLevel', () => {
-            const novice = { ...validCertification, skill_level: SkillLevel.NOVICE };
-            const expert = { ...validCertification, skill_level: SkillLevel.EXPERT };
+    describe('SkillLevel Validation', () => {
+        it('should accept valid skill_level values', () => {
+            const novice = { ...validCertification, skill_level: 'Novice' as SkillLevel };
+            const expert = { ...validCertification, skill_level: 'Expert' as SkillLevel };
 
             expect(() => validateCertification(novice)).not.toThrow();
             expect(() => validateCertification(expert)).not.toThrow();
         });
 
-        it('should reject invalid SkillLevel', () => {
+        it('should reject invalid skill_level', () => {
             const cert = { ...validCertification, skill_level: 'Master' };
             const result = safeParseCertification(cert);
             expect(result.success).toBe(false);
@@ -129,8 +153,8 @@ describe('Certification Type Validation', () => {
     });
 
     describe('Required Fields Validation', () => {
-        it('should reject empty id', () => {
-            const cert = { ...validCertification, id: '' };
+        it('should reject empty slug', () => {
+            const cert = { ...validCertification, slug: '' };
             const result = safeParseCertification(cert);
             expect(result.success).toBe(false);
         });
@@ -154,7 +178,7 @@ describe('Certification Type Validation', () => {
         });
 
         it('should reject missing required fields', () => {
-            const cert = { id: 'test', title: 'Test' };
+            const cert = { id: 1, slug: 'test', title: 'Test' };
             const result = safeParseCertification(cert);
             expect(result.success).toBe(false);
         });
